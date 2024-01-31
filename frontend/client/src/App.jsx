@@ -55,40 +55,38 @@ function App() {
       signer = await provider.getSigner();
 
       // Check if the network is correct, if not, change it
-      if (Number(nw.chainId) !== 534351) {
-        toast.warn('Switching Networks')
-        try {
-          await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x8274f' }],
-          })
-          // window.location.reload();
-          provider = new ethers.BrowserProvider(window.ethereum);
-
+    if (Number(nw.chainId) !== 1) {
+  toast.warn('Switching Networks');
+  try {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x1' }],
+    });
+    provider = new ethers.BrowserProvider(window.ethereum);
         } catch (switchError) {
           console.log({ switchError })
           if (switchError.code === 4902) {
-            toast.warn('Adding Scroll Sepolia to your MetaMask');
-            try {
-              await window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [{ 
-                  chainId: '0x8274f',
-                  chainName: 'Scroll Sepolia Testnet',
-                  nativeCurrency: {
-                    name: 'ETH',
-                    symbol: 'ETH',
-                    decimals: 18
-                  },
-                  rpcUrls: ['https://sepolia-rpc.scroll.io'],
-                  blockExplorerUrls: ['https://sepolia-blockscout.scroll.io']
-                }],
-              });
-              init();
-            } catch (addError) {
-              toast.error('There was an error adding the network, please refresh and try again.');
-              console.error(addError);
-            }
+           toast.warn('Adding Ethereum Mainnet to your MetaMask');
+try {
+  await window.ethereum.request({
+    method: 'wallet_addEthereumChain',
+    params: [{
+      chainId: '0x1',
+      chainName: 'Ethereum Mainnet',
+      nativeCurrency: {
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18
+      },
+      rpcUrls: ['https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID'],
+      blockExplorerUrls: ['https://etherscan.io/']
+    }],
+  });
+  init();
+} catch (addError) {
+  toast.error('There was an error adding the network, please refresh and try again.');
+  console.error(addError);
+}
           }
         }
       }
